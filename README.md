@@ -81,4 +81,86 @@ Prisma ORM is a powerful tool for working with databases in Node.js applications
      node app.js
      ```
 
-This is just a basic example to get you started. Prisma offers more advanced features like transactions, migrations, and more, which you can explore further in their documentation.
+Creating a model in Prisma involves defining the structure of your data using the Prisma Schema Language (PSL). Here are the basics you should know to create a model:
+
+1. **Model Definition**:
+   - Define a model using the `model` keyword followed by the name of the model.
+   - Inside the model block, specify the fields along with their data types.
+
+   Example:
+   ```prisma
+   model User {
+     id        Int       @id @default(autoincrement())
+     username  String
+     email     String    @unique
+     age       Int?
+     createdAt DateTime  @default(now())
+   }
+   ```
+
+2. **Field Definitions**:
+   - Each field within a model represents a property of your data.
+   - Specify the name of the field followed by its data type.
+   - You can optionally add additional attributes like `@id`, `@unique`, `@default`, or `@relation`.
+
+3. **Primary Key (`@id`)**:
+   - Use the `@id` attribute to specify a field as the primary key.
+   - Prisma requires at least one field to be marked as `@id`.
+
+4. **Auto-increment (`@default(autoincrement())`)**:
+   - Use `@default(autoincrement())` to automatically generate values for an integer primary key.
+
+5. **Unique Constraint (`@unique`)**:
+   - Use `@unique` to ensure that the values in a field are unique across all records.
+
+6. **Optional Fields**:
+   - Use the `?` suffix after the data type to denote that a field is optional.
+   - Optional fields can have a value or be null.
+
+7. **Default Values (`@default`)**
+   - Use `@default(value)` to specify a default value for a field.
+   - Commonly used with `DateTime` fields to set the creation/update timestamps automatically.
+
+8. **Relationships (`@relation`)**:
+   - Define relationships between models using the `@relation` attribute.
+   - Specify the related field and reference field using `fields` and `references` respectively.
+
+   Example:
+   ```prisma
+   model Post {
+     id        Int      @id @default(autoincrement())
+     title     String
+     content   String
+     author    User?    @relation(fields: [authorId], references: [id])
+     authorId  Int?
+   }
+   ```
+
+   In this example, `author` field establishes a relationship between `Post` and `User` models.
+
+9. **Custom Types**:
+   - You can define custom data types using `enum` or `type` keywords.
+   - Enums represent a predefined set of values.
+   - Types define reusable structures for your data.
+
+   Example:
+   ```prisma
+   enum Role {
+     USER
+     ADMIN
+   }
+   ```
+
+   ```prisma
+   type Address {
+     street  String
+     city    String
+     country String
+   }
+   ```
+
+10. **Generated Prisma Client**:
+    - After defining your models, run `prisma generate` to generate Prisma Client.
+    - Prisma Client provides a type-safe API for interacting with your database based on your defined models.
+
+These are the basic concepts you should know to create models using Prisma Schema Language. As you gain more experience, you can explore advanced features and optimizations offered by Prisma.
