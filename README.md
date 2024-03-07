@@ -164,3 +164,29 @@ Creating a model in Prisma involves defining the structure of your data using th
     - Prisma Client provides a type-safe API for interacting with your database based on your defined models.
 
 These are the basic concepts you should know to create models using Prisma Schema Language. As you gain more experience, you can explore advanced features and optimizations offered by Prisma.
+**Read & Write data into the database**
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
+async function main() {
+  await prisma.user.create({
+    data: {
+      name: 'Alice',
+      email: 'alice@prisma.io',
+      posts: {
+        create: { title: 'Hello World' },
+      },
+      profile: {
+        create: { bio: 'I like turtles' },
+      },
+    },
+  })
+
+  const allUsers = await prisma.user.findMany({
+    include: {
+      posts: true,
+      profile: true,
+    },
+  })
+  console.dir(allUsers, { depth: null })
+}
